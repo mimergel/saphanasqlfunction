@@ -8,7 +8,7 @@ Run the following command to install the Core Tools package:
 `npm install -g azure-functions-core-tools@4 --unsafe-perm true`
 
 # Create an Azure Functions project
-In the terminal window or from a command prompt, navigate to an empty folder for your project, and run the following command:
+In the terminal window or from a command prompt, navigate to a new empty folder [your_function_name] for your project, and run the following command:
 
 `func init`
 
@@ -25,7 +25,7 @@ This will prompt you to choose a template for your function. We recommend HTTP t
 
 # Integrate the hdbsql binary 
 copy the hdbsql binary into the subdirectory 
-`./[your_function_name]/hdbsql`
+`./hdbclient/hdbsql`
  
 # Run your function project locally
 Run the following command to start your function app:
@@ -35,15 +35,18 @@ Run the following command to start your function app:
 The runtime will output a URL for any HTTP functions, which can be copied and run in your browser's address bar.
 To stop debugging, use Ctrl-C in the terminal.
 
-# Test the function
-In a separate termin run:
+# Configure local settings 
+Enter your details into local.settings.json for the local testing
 
-`cat test.sql | curl -X POST http://localhost:7071/api/saphanasql -H "Content-Type: application/json" --data-binary @- `
+# Test the function
+In a separate terminal run:
+
+`cat test.sql | curl -X POST http://localhost:7071/api/[your_function_name] -H "Content-Type: application/json" --data-binary @- `
 
 
 # Deploy your code to Azure
 To publish your Functions project into Azure, enter the following command:
 
-`func azure functionapp publish saphanasql`
+`func azure functionapp publish [your_function_name]`
 
 You may be prompted to sign into Azure. Follow the onscreen instructions.
