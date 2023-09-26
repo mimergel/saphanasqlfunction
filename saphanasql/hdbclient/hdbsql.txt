@@ -1,0 +1,1 @@
+place here the hdbsql binary for linux or windows depending on which OS is used for the Azure function
