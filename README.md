@@ -17,6 +17,10 @@ This will prompt you to choose a template for your function. We recommend HTTP t
 
 # Download this repo into the current folder
 `git clone https://github.com/mimergel/saphanasqlfunction.git`
+
+# Integrate the hdbsql binary 
+copy the hdbsql binary into the subdirectory 
+`./[your_function_name]/hdbsql`
  
 # Run your function project locally
 Run the following command to start your function app:
