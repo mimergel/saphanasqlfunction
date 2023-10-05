@@ -36,7 +36,7 @@ The runtime will output a URL for any HTTP functions, which can be copied and ru
 To stop debugging, use Ctrl-C in the terminal.
 
 # Configure local settings 
-Enter your details into local.settings.json for the local testing
+Enter your details into local.settings.json for testing the script on the VM before publishing.
 
 # Test the function
 In a separate terminal run:
