@@ -1,0 +1,11 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "python",
+    "AzureWebJobsStorage": "",
+    "DB_USER": "SAPHANADB",
+    "DB_USER_SECRET": "xxxxxxxxxxxx",
+    "SID": "HDB",
+    "TARGETDB" :"10.110.2.5:30013"
+  }
+}
