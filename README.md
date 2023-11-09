@@ -26,6 +26,9 @@ This will prompt you to choose a template for your function. We recommend HTTP t
 # Integrate the hdbsql binary 
 copy the hdbsql binary into the subdirectory 
 `./hdbclient/hdbsql`
+
+You can get the hdbsql here: https://me.sap.com/softwarecenter
+It's part of the package: SAP HANA CLIENT 2.0
  
 # Run your function project locally
 Run the following command to start your function app:
