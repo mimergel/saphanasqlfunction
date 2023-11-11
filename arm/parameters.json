@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        },
+        "name": {
+            "value": "saphanasql1234"
+        },
+        "location": {
+            "value": "West Europe"
+        },
+        "use32BitWorkerProcess": {
+            "value": false
+        },
+        "ftpsState": {
+            "value": "FtpsOnly"
+        },
+        "storageAccountName": {
+            "value": "saphanasql"
+        },
+        "linuxFxVersion": {
+            "value": "DOCKER|mcr.microsoft.com/azure-functions/dotnet:4-appservice-quickstart"
+        },
+        "dockerRegistryUrl": {
+            "value": "https://mcr.microsoft.com"
+        },
+        "dockerRegistryUsername": {
+            "value": ""
+        },
+        "dockerRegistryPassword": {
+            "value": null
+        },
+        "dockerRegistryStartupCommand": {
+            "value": ""
+        },
+        "hostingPlanName": {
+            "value": "sapmon-app-3bf770a04625e8"
+        },
+        "serverFarmResourceGroup": {
+            "value": "SAPMON-RG"
+        },
+        "alwaysOn": {
+            "value": false
+        }
+    }
+}

@@ -1,55 +1,188 @@
-# saphanasqlfunction
-Executes SAP HANA binary hdbsql to connect to a HANA DB and execute an SQL command.
+# Setup a function that executes SAP HANA SQL binary  
+With the help of this repository you can create an Azure Function App that can execute an SQL statement on a SAP HANA Datebase. The Function will receive an HTTP request with the SQL statement, then run the statement using hdbsql binary against the HANA DB and finally return the result.
 
-# Install dependencies
-Before you can get started, you should install Node.js which includes npm. This is how you will obtain the Azure Functions Core Tools. If you prefer not to install Node.js, see the other installation options in our Core Tools reference.
-Run the following command to install the Core Tools package:
+The setup process described here is based on the execution on a Linux VM with Ubuntu 22.04.
+The VM is running in a subnet that has access to the HANA DB. 
+With that we can test the function locally before pushing to Azure. 
 
-`npm install -g azure-functions-core-tools@4 --unsafe-perm true`
-
-# Create an Azure Functions project
-In the terminal window or from a command prompt, navigate to a new empty folder [your_function_name] for your project, and run the following command:
-
-`func init`
-
-You will also be prompted to choose a runtime for the project. Select .
-Create a function
-To create a function, run the following command:
-
-`func new`
-
-This will prompt you to choose a template for your function. We recommend HTTP trigger for getting started.
 
 # Download this repo into the current folder
-`git clone https://github.com/mimergel/saphanasqlfunction.git`
+
+- Login to the VM and clone this repository:
+
+    `git clone https://github.com/mimergel/saphanasqlfunction.git`
+
+    `cd saphanasqlfunction`
 
 # Integrate the hdbsql binary 
-copy the hdbsql binary into the subdirectory 
-`./hdbclient/hdbsql`
 
-- You can get the hdbsql here: [SAP Software Center](https://me.sap.com/softwarecenter)
-- It's part of the package: SAP HANA CLIENT 2.0
- 
-# Run your function project locally
-Run the following command to start your function app:
+- You can download the hdbsql here: [SAP Software Center](https://me.sap.com/softwarecenter).
+- It's part of the package: SAP HANA CLIENT 2.0.
+- In order to uncompress the package you'll also need to download SAPCAR binary.
+- Copy the hdbsql binary into this subdirectory:
 
-`func start`
+    `cd ~/saphanasqlfunction/saphanasql/hdbclient/`
 
-The runtime will output a URL for any HTTP functions, which can be copied and run in your browser's address bar.
-To stop debugging, use Ctrl-C in the terminal.
+- When you have copied the hdbsql in here, make sure to set execute permissions: 
+
+    ```
+    ~/saphanasqlfunction/saphanasql/hdbclient$ ls -l
+    total 33100
+    -r-xr-xr-x 1 azureadm azureadm 33889680 Apr 20  2023 hdbsql
+    -rw-rw-r-- 1 azureadm azureadm      102 Nov 10 19:11 hdbsql.txt
+    ```
 
 # Configure local settings 
-Enter your details into local.settings.json for testing the script on the VM before publishing.
 
-# Test the function
-In a separate terminal run:
+- Configure local settings to match your HANA DB parameters:
 
-`cat test.sql | curl -X POST http://localhost:7071/api/[your_function_name] -H "Content-Type: application/json" --data-binary @- `
+    ```
+    cd ~/saphanasqlfunction
+    vi local.settings.json
+    ```
+
+    ```
+    {
+    "IsEncrypted": false,
+    "Values": {
+        "FUNCTIONS_WORKER_RUNTIME": "python",
+        "AzureWebJobsStorage": "",
+        "DB_USER": "FLIGHTDEMO",
+        "DB_USER_SECRET": "set your password",
+        "SID": "HDB",
+        "TARGETDB" :"saphanadb.contoso.com:30013"
+        }
+    }
+
+    ```
+
+# Test the Function App locally
+
+- Run the following command to start your function app:
+
+    ```
+    cd ~/saphanasqlfunction
+    func start
+    ```
+
+- The runtime will output the URL for the HTTP functions, on which we will test the function. 
+
+    ```
+    ~/saphanasqlfunction$ func start
+    Found Python version 3.10.13 (python3).
+
+    Azure Functions Core Tools
+    Core Tools Version:       4.0.5198 Commit hash: N/A  (64-bit)
+    Function Runtime Version: 4.21.1.20667
 
 
-# Deploy your code to Azure
-To publish your Functions project into Azure, enter the following command:
+    Functions:
 
-`func azure functionapp publish [your_function_name]`
+            saphanasql: [GET,POST] http://localhost:7071/api/saphanasql
 
-You may be prompted to sign into Azure. Follow the onscreen instructions.
+    For detailed output, run func with --verbose flag.
+    [2023-11-10T19:28:23.656Z] Worker process started and initialized.
+    [2023-11-10T19:28:27.866Z] Host lock lease acquired by instance ID '0000000000000000000000003399B9E1'.
+
+    ```
+
+- In a another terminal call the function with an SQL command. Here we are using the SAP flight demo data and have generated the data upfront. The FLIGHTDEMO user has read access. 
+
+    ```
+    cd ~/saphanasqlfunction
+    cat test.sql | curl -X POST http://localhost:7071/api/saphanasql -H "Content-Type: application/json" --data-binary @-
+    ```
+
+- When the user can connect and has read access on the relevant tables a results will be shown:
+
+    ```
+    FLDATE,NUM_FLIGHTS
+    "20230828",24
+    ```
+
+- If it doesn't work yet you can check in the first terminal windows for errors. Increase the verbosity if needed.
+
+- To stop testing, use Ctrl-C in the terminal.
+
+
+# Create the Function App in Azure
+
+- Create the Function App in the Azure Portal:
+
+    ![Create Function](images/create-function.jpg)
+
+    ---
+
+    ![Create Function 1](images/create-function1.jpg)
+
+    Note: The function currently only works with python 3.8
+
+    ---
+
+    ![Create Function 2](images/create-function2.jpg)
+
+    ---
+
+    ![Create Function Storage](images/storage.jpg)
+
+    Note: You can use an existing storage account if one is available. 
+
+    ---
+
+    ![Create Function Networking 1](images/networking1.jpg)
+
+    Note: Enable `Network injection` into a subnet that has access to the SAP HANA DB
+
+    ---
+
+    ![Create Function Networking 2](images/networking2.jpg)
+
+    ---
+
+    ![Create Function Monitoring](images/monitoring.jpg)
+
+
+
+# Publish the Function App
+
+- Login to Azure:
+
+    ```
+    az login
+    ```
+
+- Publish your Functions App to:
+
+    ```
+    func azure functionapp publish saphanasql123
+    ```
+
+
+# Set required Application Environment
+
+- Set the following application environment:
+    - DB_USER
+    - DB_USER_SECRET
+    - SID
+    - TARGETDB
+
+- Use the same values like on the `local.settings.json`
+
+    ![Application Environment](images/environment.jpg)
+
+# Using an Azure Key Vault 
+
+It's recommended to store secrets in an Azure Key Vault. 
+
+To achieve this you can create a system assigned identity for the function app and allow this identity to read the relevant secret in a key vault.
+
+![Identity](images/identity.jpg)
+
+Instead of the password we need to enter the reference to the key vault in the application environment of DB_USER_SECRET. Format:
+
+![Secret](images/secret.jpg)
+
+```
+@Microsoft.KeyVault(SecretUri=https://yourkeyvaultname.vault.azure.net/secrets/secretname/xxxxsecret_idxxxxxxxxxxxxxxxxxx)
+```
+

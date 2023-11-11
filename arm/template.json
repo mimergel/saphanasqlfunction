@@ -1,0 +1,201 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "type": "String"
+        },
+        "name": {
+            "type": "String"
+        },
+        "location": {
+            "type": "String"
+        },
+        "use32BitWorkerProcess": {
+            "type": "Bool"
+        },
+        "ftpsState": {
+            "type": "String"
+        },
+        "storageAccountName": {
+            "type": "String"
+        },
+        "linuxFxVersion": {
+            "type": "String"
+        },
+        "dockerRegistryUrl": {
+            "type": "String"
+        },
+        "dockerRegistryUsername": {
+            "type": "String"
+        },
+        "dockerRegistryPassword": {
+            "type": "SecureString"
+        },
+        "dockerRegistryStartupCommand": {
+            "type": "String"
+        },
+        "hostingPlanName": {
+            "type": "String"
+        },
+        "serverFarmResourceGroup": {
+            "type": "String"
+        },
+        "alwaysOn": {
+            "type": "Bool"
+        }
+    },
+    "variables": {
+        "inboundSubnetDeployment": "inboundSubnetDeployment",
+        "outboundSubnetDeployment": "outboundSubnetDeployment",
+        "storageSubnetDeployment": "storageSubnetDeployment"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "2018-11-01",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[variables('outboundSubnetDeployment')]"
+            ],
+            "tags": {},
+            "kind": "functionapp,linux",
+            "properties": {
+                "name": "[parameters('name')]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~4"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_URL",
+                            "value": "[parameters('dockerRegistryUrl')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_USERNAME",
+                            "value": "[parameters('dockerRegistryUsername')]"
+                        },
+                        {
+                            "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
+                            "value": "[parameters('dockerRegistryPassword')]"
+                        },
+                        {
+                            "name": "WEBSITES_ENABLE_APP_SERVICE_STORAGE",
+                            "value": "false"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx','SAPHANASQL','Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageAccountName'),';AccountKey=',listKeys(resourceId('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx','SAPHANASQL','Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2019-06-01').keys[0].value,';EndpointSuffix=','core.windows.net')]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "saphanasql1234907a"
+                        }
+                    ],
+                    "cors": {
+                        "allowedOrigins": [
+                            "https://portal.azure.com"
+                        ]
+                    },
+                    "use32BitWorkerProcess": "[parameters('use32BitWorkerProcess')]",
+                    "ftpsState": "[parameters('ftpsState')]",
+                    "linuxFxVersion": "[parameters('linuxFxVersion')]",
+                    "appCommandLine": "[parameters('dockerRegistryStartupCommand')]"
+                },
+                "clientAffinityEnabled": false,
+                "virtualNetworkSubnetId": "/subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdx/resourceGroups/dev-weeu-sap01-infrastructure/providers/Microsoft.Network/virtualNetworks/DEV-WEEU-SAP01-vnet/subnets/DEV-WEEU-SAP01_admin-subnet",
+                "publicNetworkAccess": "Enabled",
+                "vnetRouteAllEnabled": true,
+                "httpsOnly": true,
+                "serverFarmId": "[concat('/subscriptions/', parameters('subscriptionId'),'/resourcegroups/', parameters('serverFarmResourceGroup'), '/providers/Microsoft.Web/serverfarms/', parameters('hostingPlanName'))]"
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-07-01",
+            "name": "[variables('outboundSubnetDeployment')]",
+            "dependsOn": [],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "variables": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                            "apiVersion": "2020-07-01",
+                            "name": "DEV-WEEU-SAP01-vnet/DEV-WEEU-SAP01_admin-subnet",
+                            "properties": {
+                                "delegations": [
+                                    {
+                                        "name": "Microsoft.Web.serverFarms",
+                                        "id": "/subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/resourceGroups/dev-weeu-sap01-infrastructure/providers/Microsoft.Network/virtualNetworks/DEV-WEEU-SAP01-vnet/subnets/DEV-WEEU-SAP01_admin-subnet/delegations/Microsoft.Web.serverFarms",
+                                        "etag": "W/\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+                                        "properties": {
+                                            "provisioningState": "Succeeded",
+                                            "serviceName": "Microsoft.Web/serverFarms",
+                                            "actions": [
+                                                "Microsoft.Network/virtualNetworks/subnets/action"
+                                            ]
+                                        },
+                                        "type": "Microsoft.Network/virtualNetworks/subnets/delegations"
+                                    }
+                                ],
+                                "serviceEndpoints": [
+                                    {
+                                        "provisioningState": "Succeeded",
+                                        "service": "Microsoft.KeyVault",
+                                        "locations": [
+                                            "*"
+                                        ]
+                                    },
+                                    {
+                                        "provisioningState": "Succeeded",
+                                        "service": "Microsoft.Storage",
+                                        "locations": [
+                                            "westeurope",
+                                            "northeurope"
+                                        ]
+                                    }
+                                ],
+                                "provisioningState": "Succeeded",
+                                "addressPrefix": "10.110.1.0/24",
+                                "networkSecurityGroup": {
+                                    "id": "/subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/resourceGroups/DEV-WEEU-SAP01-INFRASTRUCTURE/providers/Microsoft.Network/networkSecurityGroups/DEV-WEEU-SAP01_adminSubnet-nsg"
+                                },
+                                "serviceAssociationLinks": [
+                                    {
+                                        "name": "AppServiceLink",
+                                        "id": "/subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/resourceGroups/DEV-WEEU-SAP01-INFRASTRUCTURE/providers/Microsoft.Network/virtualNetworks/DEV-WEEU-SAP01-vnet/subnets/DEV-WEEU-SAP01_admin-subnet/serviceAssociationLinks/AppServiceLink",
+                                        "etag": "W/\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"",
+                                        "type": "Microsoft.Network/virtualNetworks/subnets/serviceAssociationLinks",
+                                        "properties": {
+                                            "provisioningState": "Succeeded",
+                                            "linkedResourceType": "Microsoft.Web/serverfarms",
+                                            "link": "/subscriptions/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx/resourceGroups/SAPMON-RG/providers/Microsoft.Web/serverfarms/sapmon-app-3bf770a04625e8",
+                                            "enabledForArmDeployments": false,
+                                            "allowDelete": false,
+                                            "locations": []
+                                        }
+                                    }
+                                ],
+                                "privateEndpointNetworkPolicies": "Enabled",
+                                "privateLinkServiceNetworkPolicies": "Disabled"
+                            }
+                        }
+                    ]
+                }
+            },
+            "subscriptionId": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "resourceGroup": "dev-weeu-sap01-infrastructure"
+        }
+    ]
+}
