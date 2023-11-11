@@ -187,6 +187,25 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
 
 <br>
 
+# Test
+
+- Before using the function we can test in the portal:
+
+    ![Test](images/test.jpg)
+
+<br>
+
+# Retrieve Function URI and KEY
+
+- Retrieve your URI and Key as shown in the screenshots:
+
+    ![URI](images/uri.jpg)
+
+    ![Key](images/key.jpg)
+
+<br>
+
+
 # Using an Azure Key Vault 
 
 It's recommended to store secrets in an Azure Key Vault. 
