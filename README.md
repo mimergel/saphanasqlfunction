@@ -157,13 +157,13 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
 
 # Publish the Function App
 
-- Login to Azure:
+- On the VM login to Azure:
 
     ```
     az login
     ```
 
-- Publish your Functions App to:
+- Publish the Functions App:
 
     ```
     func azure functionapp publish [your function app name]
@@ -203,8 +203,9 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
 
     ![Key](images/key.jpg)
 
-<br>
+- We'll use the URI and KEY in the Power Automate Flow to call this Function from an HTTP Connector.
 
+<br>
 
 # Using an Azure Key Vault 
 
