@@ -6,7 +6,7 @@ The VM is running in a subnet that has access to the HANA DB.
 With that we can test the function locally before pushing to Azure. 
 
 
-# Download this repo into the current folder
+# Download this Repository
 
 - Login to the VM and clone this repository:
 
@@ -26,7 +26,9 @@ With that we can test the function locally before pushing to Azure.
 - When you have copied the hdbsql in here, make sure to set execute permissions: 
 
     ```
-    ~/saphanasqlfunction/saphanasql/hdbclient$ ls -l
+    cd ~/saphanasqlfunction/saphanasql/hdbclient
+    chmod 555 hdbsql
+    ls -l
     total 33100
     -r-xr-xr-x 1 azureadm azureadm 33889680 Apr 20  2023 hdbsql
     -rw-rw-r-- 1 azureadm azureadm      102 Nov 10 19:11 hdbsql.txt
@@ -115,7 +117,7 @@ With that we can test the function locally before pushing to Azure.
 
     ![Create Function 1](images/create-function1.jpg)
 
-    Note: The function currently only works with python 3.8
+    Note: The function currently only works with Python 3.8. Choose an unsued Function App name.
 
     ---
 
@@ -154,7 +156,7 @@ With that we can test the function locally before pushing to Azure.
 - Publish your Functions App to:
 
     ```
-    func azure functionapp publish saphanasql123
+    func azure functionapp publish [your function app name]
     ```
 
 
