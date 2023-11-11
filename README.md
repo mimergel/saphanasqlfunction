@@ -5,7 +5,7 @@ The setup process described here is based on the execution on a Linux VM with Ub
 The VM is running in a subnet that has access to the HANA DB. 
 With that we can test the function locally before pushing to Azure. 
 
-See also: https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=linux%2Cbash%2Cazure-cli&pivots=python-mode-decorators
+See also the [Quickstart: Create a Python function in Azure from the command line](https://learn.microsoft.com/en-us/azure/azure-functions/create-first-function-cli-python?tabs=linux%2Cbash%2Cazure-cli&pivots=python-mode-decorators)
 
 # Download this Repository
 
