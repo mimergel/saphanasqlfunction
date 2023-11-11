@@ -13,7 +13,7 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
 
     `git clone https://github.com/mimergel/saphanasqlfunction.git`
 
-    `cd saphanasqlfunction`
+<br>
 
 # Integrate the hdbsql binary 
 
@@ -34,6 +34,8 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
     -r-xr-xr-x 1 azureadm azureadm 33889680 Apr 20  2023 hdbsql
     -rw-rw-r-- 1 azureadm azureadm      102 Nov 10 19:11 hdbsql.txt
     ```
+
+<br>
 
 # Configure local settings 
 
@@ -58,6 +60,9 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
     }
 
     ```
+
+<br>
+
 
 # Test the Function App locally
 
@@ -108,6 +113,9 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
 - To stop testing, use Ctrl-C in the terminal.
 
 
+<br>
+
+
 # Create the Function App in Azure
 
 - Create the Function App in the Azure Portal:
@@ -145,6 +153,7 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
     ![Create Function Monitoring](images/monitoring.jpg)
 
 
+<br>
 
 # Publish the Function App
 
@@ -161,6 +170,8 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
     ```
 
 
+<br>
+
 # Set required Application Environment
 
 - Set the following application environment:
@@ -172,6 +183,9 @@ See also the [Quickstart: Create a Python function in Azure from the command lin
 - Use the same values like on the `local.settings.json`
 
     ![Application Environment](images/environment.jpg)
+
+
+<br>
 
 # Using an Azure Key Vault 
 
