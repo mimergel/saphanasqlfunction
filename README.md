@@ -223,8 +223,39 @@ Instead of the password we need to enter the reference to the key vault in the a
 @Microsoft.KeyVault(SecretUri=https://yourkeyvaultname.vault.azure.net/secrets/secretname/xxxxsecret_idxxxxxxxxxxxxxxxxxx)
 ```
 
-
 <br>
+
+## Limit network access
+
+For seucrity reason it's recommended to limit access to the power automate flow source IPs. Calls made from the power automate flows go directly through the Azure Logic Apps service. To help simplify the configuration, you can use the available service tag "LogicApp".
+
+- In the function app go to “Networking” and enter the details by clicking on “Enabled with access restrictions”. 
+
+    ![Secret](images/restrict.jpg)
+
+
+- Enable access from selected VNET & IPs
+
+    ![Secret](images/restrict1.jpg)
+
+
+- Change the unmatched rule for Main Site and Tool site access to deny
+
+    ![Secret](images/restrict2.jpg)
+
+    ![Secret](images/restrict3.jpg)
+
+
+- Add an allow rule for source “LogicApp”
+
+    ![Secret](images/restrict4.jpg)
+
+- After saving
+
+    ![Secret](images/restrict5.jpg)
+
+Please note that this restriction will prevent the possibility to test the function app from the portal.
+
 
 ## Disclaimer
 
