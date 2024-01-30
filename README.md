@@ -257,6 +257,14 @@ For seucrity reason it's recommended to limit access to the power automate flow 
 Please note that this restriction will prevent the possibility to test the function app from the portal.
 
 
+## Contributing
+
+Contributions to enhance the capabilities are welcome.
+
+## License
+
+This project is licensed under the MIT License.
+
 ## Disclaimer
 
 THE CONTENT OF THIS REPOSITORY IS PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING ANY IMPLIED WARRANTIES OF FITNESS FOR A PARTICULAR PURPOSE, MERCHANTABILITY, OR NON-INFRINGEMENT.
